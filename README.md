@@ -71,3 +71,8 @@ php ip2location-csv-converter.php -range IP2LOCATION-DB1.CSV IP2LOCATION-DB1.NEW
 "1.10.32.0/19","CN","China"
 ```
 
+## Custom Input File
+You can use this converter for a custom input file provided the input is in CSV format, with the first and second field contain the **ip from** and **ip to** information in numeric format.
+
+## Support
+URL: https://www.ip2location.com
