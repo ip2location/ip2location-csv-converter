@@ -4,9 +4,9 @@ This PHP script converts IP2Location CSV database into IP range or CIDR format. 
 
 Please note that this conversion script doesn't works with IP2Location BIN data file.
 
-You can download the IP2Location CSV file at the below links:
-[IP2Location Commercial Database](https://www.ip2location.com) 
-[IP2Location LITE Database](https://lite.ip2location.com)
+You can download the IP2Location CSV file at the below links:  
+[IP2Location Commercial Database](https://www.ip2location.com)   
+[IP2Location LITE Database](https://lite.ip2location.com)  
 
 
 ## Usage
