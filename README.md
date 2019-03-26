@@ -1,7 +1,12 @@
 # IP2Location CSV Converter
 
-This PHP script converts IP2Location CSV database into IP range or CIDR format.
+This PHP script converts IP2Location CSV database into IP range or CIDR format. It supports the IP2Location DB1 to DB24 database in CSV format for conversion, including IP2Location LITE database.
 
+Please note that this conversion script doesn't works with IP2Location BIN data file.
+
+You can download the IP2Location CSV file at the below links:
+[IP2Location Commercial Database](https://www.ip2location.com) 
+[IP2Location LITE Database](https://lite.ip2location.com)
 
 
 ## Usage
