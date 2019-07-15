@@ -1,0 +1,17 @@
+{
+    "name": "ip2location/ip2location-csv-converter",
+    "description": "This PHP script converts IP2Location CSV database into IP range or CIDR format.",
+    "keywords": ["ip2location", "ip2locationlite", "csv", "converter", "geolocation"],
+    "homepage": "https://www.ip2location.com",
+    "license": "MIT",
+    "autoload": {
+        "classmap": ["ip2location-csv-converter.php"]
+    },
+    "authors": [
+        {
+        "name": "IP2Location",
+        "email": "support@ip2location.com",
+        "homepage": "https://www.ip2location.com"
+        }
+    ]
+}
