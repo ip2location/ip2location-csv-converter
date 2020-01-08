@@ -13,39 +13,66 @@ if (!isset($argv)) {
 	die('ERROR: Please run this script in command line.');
 }
 
-if (!isset($argv[1])) {
-	die('ERROR: Please provide coversion mode. (-range or -cidr)');
+$conversionMode = 'range';
+$writeMode = 'replace';
+
+foreach ($argv as $param) {
+	if (substr($param, 0, 1) == '-') {
+		switch ($param) {
+			case '-range':
+				$conversionMode = 'range';
+				break;
+
+			case '-cidr':
+				$conversionMode = 'cidr';
+				break;
+
+			case '-replace':
+				$writeMode = 'replace';
+				break;
+
+			case '-append':
+				$writeMode = 'append';
+				break;
+
+			default:
+				die('ERROR: Invalid parameter "' . $param . '".');
+		}
+	}
 }
 
-if (!in_array($argv[1], ['-range', '-cidr'])) {
-	die('ERROR: Please provide a valid coversion mode. (-range or -cidr)');
+if (count($argv) < 3) {
+	die('ERORR: Missing parameters.');
 }
 
-if (!isset($argv[2])) {
-	die('ERROR: Please provide the absolute path to input CSV file.');
+if (!isset($argv[count($argv) - 2])) {
+	die('ERORR: The input CSV is not provided.');
 }
 
-if (!file_exists($argv[2])) {
+if (!isset($argv[count($argv) - 1])) {
+	die('ERORR: The output directory is not provided.');
+}
+
+$input = $argv[count($argv) - 2];
+$output = $argv[count($argv) - 1];
+
+if (!file_exists($input)) {
 	die('ERROR: The input CSV file is not found.');
 }
 
-if (!isset($argv[3])) {
-	die('ERROR: Please provide the absolute path to output CSV file.');
-}
-
-if (!is_writable(dirname($argv[3]))) {
+if (!is_writable(dirname($output))) {
 	die('ERROR: The output directory is not writable.');
 }
 
-$file = fopen($argv[2], 'r');
+$file = fopen($input, 'r');
 
 if (!$file) {
 	die('ERROR: Failed to read the input CSV.');
 }
 
-@file_put_contents($argv[3], '');
+@file_put_contents($output, '');
 
-if ($argv[1] == '-range') {
+if ($conversionMode == 'range') {
 	while (!feof($file)) {
 		$data = fgetcsv($file);
 
@@ -56,10 +83,14 @@ if ($argv[1] == '-range') {
 		$from = long2ip($data[0]);
 		$to = long2ip($data[1]);
 
-		unset($data[0]);
-		unset($data[1]);
+		if ($writeMode == 'replace') {
+			unset($data[0]);
+			unset($data[1]);
 
-		@file_put_contents($argv[3], '"' . $from . '","' . $to . '","' . implode('","', $data) . "\"\n", FILE_APPEND);
+			@file_put_contents($output, '"' . $from . '","' . $to . '","' . implode('","', $data) . "\"\n", FILE_APPEND);
+		} else {
+			@file_put_contents($output, '"' . implode('","', array_merge(array_splice($data, 0, 2), [$from, $to], array_splice($data, 0))) . "\"\n", FILE_APPEND);
+		}
 	}
 } else {
 	while (!feof($file)) {
@@ -71,11 +102,20 @@ if ($argv[1] == '-range') {
 
 		$rows = rangeToCIDR(long2ip($data[0]), long2ip($data[1]));
 
-		unset($data[0]);
-		unset($data[1]);
+		if ($writeMode == 'replace') {
+			unset($data[0]);
+			unset($data[1]);
 
-		foreach ($rows as $row) {
-			@file_put_contents($argv[3], '"' . implode('","', array_merge([$row], $data)) . "\"\n", FILE_APPEND);
+			foreach ($rows as $row) {
+				@file_put_contents($output, '"' . implode('","', array_merge([$row], $data)) . "\"\n", FILE_APPEND);
+			}
+		} else {
+			$prefix = array_splice($data, 0, 2);
+			$suffix = array_splice($data, 0);
+
+			foreach ($rows as $row) {
+				@file_put_contents($output, '"' . implode('","', array_merge($prefix, [$row], $suffix)) . "\"\n", FILE_APPEND);
+			}
 		}
 	}
 }
@@ -103,22 +143,23 @@ function iMaxBlock($ibase, $tbit)
 
 function rangeToCIDR($ipStart, $ipEnd)
 {
-	$s = explode('.', $ipStart);
+	$parts = explode('.', $ipStart);
 
 	$start = '';
 	$dot = '';
 
-	while (list($key, $val) = each($s)) {
-		$start = sprintf('%s%s%d', $start, $dot, $val);
+	foreach ($parts as $part) {
+		$start = sprintf('%s%s%d', $start, $dot, $part);
 		$dot = '.';
 	}
 
 	$end = '';
 	$dot = '';
 
-	$e = explode('.', $ipEnd);
-	while (list($key, $val) = each($e)) {
-		$end = sprintf('%s%s%d', $end, $dot, $val);
+	$parts = explode('.', $ipEnd);
+
+	foreach ($parts as $part) {
+		$end = sprintf('%s%s%d', $end, $dot, $part);
 		$dot = '.';
 	}
 

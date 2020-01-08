@@ -11,14 +11,26 @@ Please do not use this script to convert IP2Location BIN data file. It only supp
 ## Usage
 
 ``` bash
-php ip2location-csv-converter.php [-range | -cidr] INPUT_FILE OUTPUT_FILE
+php ip2location-csv-converter.php [-range | -cidr] [-replace | -append] INPUT_FILE OUTPUT_FILE
 ```
+
+
+
+#### Parameters
+
+| Parameter | Description                                                  |
+| --------- | ------------------------------------------------------------ |
+| -range    | IP numbers will be converted into the first IP address and last IP address in the range. |
+| -cidr     | IP numbers will be converted into CIDR format.               |
+| -replace  | The IP numbers in will be replaced to the selected format.   |
+| -append   | The converted format will be appended after the IP numbers field. |
+
+
 
 **Example:**
 
 ```
-php ip2location-csv-converter.php -range IP2LOCATION-DB1.CSV IP2LOCATION-DB1.NEW.CSV
-
+php ip2location-csv-converter.php -range -replace IP2LOCATION-DB1.CSV IP2LOCATION-DB1.NEW.CSV
 ```
 
 ### Sample Input
