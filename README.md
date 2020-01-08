@@ -27,13 +27,9 @@ php ip2location-csv-converter.php [-range | -cidr] [-replace | -append] INPUT_FI
 
 
 
-**Example:**
+### Example:
 
-```
-php ip2location-csv-converter.php -range -replace IP2LOCATION-DB1.CSV IP2LOCATION-DB1.NEW.CSV
-```
-
-### Sample Input
+##### Sample Input
 
 ```
 "17170432","17301503","IN","India"
@@ -50,7 +46,15 @@ php ip2location-csv-converter.php -range -replace IP2LOCATION-DB1.CSV IP2LOCATIO
 
 
 
-### Sample Output (Range)
+##### Convert into range with replace option:
+
+Command:
+
+```
+php ip2location-csv-converter.php -range -replace IP2LOCATION-DB1.CSV IP2LOCATION-DB1.NEW.CSV
+```
+
+Output:
 
 ```
 "1.6.0.0","1.7.255.255","IN","India"
@@ -67,7 +71,15 @@ php ip2location-csv-converter.php -range -replace IP2LOCATION-DB1.CSV IP2LOCATIO
 
 
 
-### Sample Output (CIDR)
+##### Convert into CIDR with replace option:
+
+Command:
+
+```
+php ip2location-csv-converter.php -cidr -replace IP2LOCATION-DB1.CSV IP2LOCATION-DB1.NEW.CSV
+```
+
+Output:
 
 ```
 "1.6.0.0/15","IN","India"
@@ -82,7 +94,65 @@ php ip2location-csv-converter.php -range -replace IP2LOCATION-DB1.CSV IP2LOCATIO
 "1.10.32.0/19","CN","China"
 ```
 
+
+
+##### Convert into range with append option:
+
+Command:
+
+```
+php ip2location-csv-converter.php -range -append IP2LOCATION-DB1.CSV IP2LOCATION-DB1.NEW.CSV
+```
+
+Output:
+
+```
+"17170432","17301503","1.6.0.0","1.7.255.255","IN","India"
+"17301504","17367039","1.8.0.0","1.8.255.255","CN","China"
+"17367040","17432575","1.9.0.0","1.9.255.255","MY","Malaysia"
+"17432576","17435135","1.10.0.0","1.10.9.255","CN","China"
+"17435136","17435391","1.10.10.0","1.10.10.255","AU","Australia"
+"17435392","17465343","1.10.11.0","1.10.127.255","CN","China"
+"17465344","17498111","1.10.128.0","1.10.255.255","TH","Thailand"
+"17498112","17563647","1.11.0.0","1.11.255.255","KR","Korea, Republic of"
+"17563648","17825791","1.12.0.0","1.15.255.255","CN","China"
+"17825792","17842175","1.16.0.0","1.16.63.255","KR","Korea, Republic of"
+```
+
+
+
+##### Convert into CIDR with append option:
+
+Command:
+
+```
+php ip2location-csv-converter.php -cidr -append IP2LOCATION-DB1.CSV IP2LOCATION-DB1.NEW.CSV
+```
+
+Output:
+
+```
+"17170432","17301503","1.6.0.0/15","IN","India"
+"17301504","17367039","1.8.0.0/16","CN","China"
+"17367040","17432575","1.9.0.0/16","MY","Malaysia"
+"17432576","17435135","1.10.0.0/21","CN","China"
+"17432576","17435135","1.10.8.0/23","CN","China"
+"17435136","17435391","1.10.10.0/24","AU","Australia"
+"17435392","17465343","1.10.11.0/24","CN","China"
+"17435392","17465343","1.10.12.0/22","CN","China"
+"17435392","17465343","1.10.16.0/20","CN","China"
+"17435392","17465343","1.10.32.0/19","CN","China"
+"17435392","17465343","1.10.64.0/18","CN","China"
+"17465344","17498111","1.10.128.0/17","TH","Thailand"
+"17498112","17563647","1.11.0.0/16","KR","Korea, Republic of"
+"17563648","17825791","1.12.0.0/14","CN","China"
+"17825792","17842175","1.16.0.0/18","KR","Korea, Republic of"
+```
+
+
+
 ## Custom Input File
+
 You can use this converter for a custom input file provided the input is in CSV format, with the first and second field contain the **ip from** and **ip to** information in numeric format.
 
 ## Support
