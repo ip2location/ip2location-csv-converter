@@ -13,5 +13,8 @@
         "email": "support@ip2location.com",
         "homepage": "https://www.ip2location.com"
         }
-    ]
+    ],
+	"require": {
+	    "mlocati/ip-lib": "^1"
+	}
 }

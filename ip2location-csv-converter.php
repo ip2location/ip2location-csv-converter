@@ -9,6 +9,8 @@ date_default_timezone_set('UTC');
 define('DS', DIRECTORY_SEPARATOR);
 define('ROOT', __DIR__ . DS);
 
+require 'vendor/autoload.php';
+
 if (!isset($argv)) {
 	die('ERROR: Please run this script in command line.');
 }
@@ -80,8 +82,8 @@ if ($conversionMode == 'range') {
 			continue;
 		}
 
-		$from = long2ip($data[0]);
-		$to = long2ip($data[1]);
+		$from = intergerToIp($data[0]);
+		$to = intergerToIp($data[1]);
 
 		if ($writeMode == 'replace') {
 			unset($data[0]);
@@ -100,7 +102,9 @@ if ($conversionMode == 'range') {
 			continue;
 		}
 
-		$rows = rangeToCIDR(long2ip($data[0]), long2ip($data[1]));
+		$ranges = \IPLib\Factory::rangesFromBoundaries(intergerToIp($data[0]), intergerToIp($data[1]));
+
+		$rows = explode(' ', implode(' ' , $ranges));
 
 		if ($writeMode == 'replace') {
 			unset($data[0]);
@@ -183,4 +187,13 @@ function rangeToCIDR($ipStart, $ipEnd)
 	}
 
 	return $result;
+}
+
+
+function intergerToIp($number) {
+	if ($number > 4294967295) {
+		return inet_ntop(str_pad(gmp_export($number), 16, "\0", STR_PAD_LEFT));
+	}
+
+	return long2ip($number);
 }

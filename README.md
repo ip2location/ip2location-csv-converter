@@ -8,6 +8,18 @@ You can download the IP2Location CSV file at the below links:
 
 Please do not use this script to convert IP2Location BIN data file. It only support the CSV format, not the binary format.
 
+ 
+
+## Installation
+
+Please install this script using composer.
+
+```
+composer require ip2location/ip2location-csv-converter
+```
+
+
+
 ## Usage
 
 ``` bash
