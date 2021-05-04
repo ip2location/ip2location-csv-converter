@@ -18,7 +18,11 @@ Please install this script using composer.
 composer require ip2location/ip2location-csv-converter
 ```
 
+After that, please copy the php script into the root directory of composer (the folder contains the composer.json and composer.lock files)
 
+```
+cp ./vendor/ip2location/ip2location-csv-converter/ip2location-csv-converter.php ./
+```
 
 ## Usage
 
