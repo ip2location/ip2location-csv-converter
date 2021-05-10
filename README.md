@@ -38,6 +38,7 @@ php ip2location-csv-converter.php [-range | -cidr] [-replace | -append] INPUT_FI
 | --------- | ------------------------------------------------------------ |
 | -range    | IP numbers will be converted into the first IP address and last IP address in the range. |
 | -cidr     | IP numbers will be converted into CIDR format.               |
+| -hex      | IP numbers will be converted into hexadecimal format.        |
 | -replace  | The IP numbers in will be replaced to the selected format.   |
 | -append   | The converted format will be appended after the IP numbers field. |
 
@@ -108,6 +109,31 @@ Output:
 "1.10.12.0/22","CN","China"
 "1.10.16.0/20","CN","China"
 "1.10.32.0/19","CN","China"
+```
+
+
+
+##### Convert into hexadecimal with replace option:
+
+Command:
+
+```
+php ip2location-csv-converter.php -hex -replace IP2LOCATION-DB1.CSV IP2LOCATION-DB1.NEW.CSV
+```
+
+Output:
+
+```
+"0000000001060000","000000000107ffff","IN","India"
+"0000000001080000","000000000108ffff","CN","China"
+"0000000001090000","000000000109ffff","MY","Malaysia"
+"00000000010a0000","00000000010a09ff","CN","China"
+"00000000010a0a00","00000000010a0aff","AU","Australia"
+"00000000010a0b00","00000000010a7fff","CN","China"
+"00000000010a8000","00000000010affff","TH","Thailand"
+"00000000010b0000","00000000010bffff","KR","Korea, Republic of"
+"00000000010c0000","00000000010fffff","CN","China"
+"0000000001100000","0000000001103fff","KR","Korea, Republic of"
 ```
 
 

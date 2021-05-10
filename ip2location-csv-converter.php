@@ -29,6 +29,10 @@ foreach ($argv as $param) {
 				$conversionMode = 'cidr';
 				break;
 
+			case '-hex':
+				$conversionMode = 'hex';
+				break;
+
 			case '-replace':
 				$writeMode = 'replace';
 				break;
@@ -74,54 +78,79 @@ if (!$file) {
 
 @file_put_contents($output, '');
 
-if ($conversionMode == 'range') {
-	while (!feof($file)) {
-		$data = fgetcsv($file);
+switch ($conversionMode) {
+	case 'hex':
+		while (!feof($file)) {
+			$data = fgetcsv($file);
 
-		if (!preg_match('/^[0-9]+$/', $data[0]) || !preg_match('/^[0-9]+$/', $data[1])) {
-			continue;
-		}
-
-		$from = intergerToIp($data[0]);
-		$to = intergerToIp($data[1]);
-
-		if ($writeMode == 'replace') {
-			unset($data[0]);
-			unset($data[1]);
-
-			@file_put_contents($output, '"' . $from . '","' . $to . '","' . implode('","', $data) . "\"\n", FILE_APPEND);
-		} else {
-			@file_put_contents($output, '"' . implode('","', array_merge(array_splice($data, 0, 2), [$from, $to], array_splice($data, 0))) . "\"\n", FILE_APPEND);
-		}
-	}
-} else {
-	while (!feof($file)) {
-		$data = fgetcsv($file);
-
-		if (!preg_match('/^[0-9]+$/', $data[0]) || !preg_match('/^[0-9]+$/', $data[1])) {
-			continue;
-		}
-
-		$ranges = \IPLib\Factory::rangesFromBoundaries(intergerToIp($data[0]), intergerToIp($data[1]));
-
-		$rows = explode(' ', implode(' ' , $ranges));
-
-		if ($writeMode == 'replace') {
-			unset($data[0]);
-			unset($data[1]);
-
-			foreach ($rows as $row) {
-				@file_put_contents($output, '"' . implode('","', array_merge([$row], $data)) . "\"\n", FILE_APPEND);
+			if (!preg_match('/^[0-9]+$/', $data[0]) || !preg_match('/^[0-9]+$/', $data[1])) {
+				continue;
 			}
-		} else {
-			$prefix = array_splice($data, 0, 2);
-			$suffix = array_splice($data, 0);
 
-			foreach ($rows as $row) {
-				@file_put_contents($output, '"' . implode('","', array_merge($prefix, [$row], $suffix)) . "\"\n", FILE_APPEND);
+			$from = str_pad(dechex($data[0]), 16, '0', STR_PAD_LEFT);
+			$to = str_pad(dechex($data[1]), 16, '0', STR_PAD_LEFT);
+
+			if ($writeMode == 'replace') {
+				unset($data[0]);
+				unset($data[1]);
+
+				@file_put_contents($output, '"' . $from . '","' . $to . '","' . implode('","', $data) . "\"\n", FILE_APPEND);
+			} else {
+				@file_put_contents($output, '"' . implode('","', array_merge(array_splice($data, 0, 2), [$from, $to], array_splice($data, 0))) . "\"\n", FILE_APPEND);
 			}
 		}
-	}
+		break;
+
+	case 'range':
+		while (!feof($file)) {
+			$data = fgetcsv($file);
+
+			if (!preg_match('/^[0-9]+$/', $data[0]) || !preg_match('/^[0-9]+$/', $data[1])) {
+				continue;
+			}
+
+			$from = intergerToIp($data[0]);
+			$to = intergerToIp($data[1]);
+
+			if ($writeMode == 'replace') {
+				unset($data[0]);
+				unset($data[1]);
+
+				@file_put_contents($output, '"' . $from . '","' . $to . '","' . implode('","', $data) . "\"\n", FILE_APPEND);
+			} else {
+				@file_put_contents($output, '"' . implode('","', array_merge(array_splice($data, 0, 2), [$from, $to], array_splice($data, 0))) . "\"\n", FILE_APPEND);
+			}
+		}
+		break;
+
+	default:
+		while (!feof($file)) {
+			$data = fgetcsv($file);
+
+			if (!preg_match('/^[0-9]+$/', $data[0]) || !preg_match('/^[0-9]+$/', $data[1])) {
+				continue;
+			}
+
+			$ranges = \IPLib\Factory::rangesFromBoundaries(intergerToIp($data[0]), intergerToIp($data[1]));
+
+			$rows = explode(' ', implode(' ' , $ranges));
+
+			if ($writeMode == 'replace') {
+				unset($data[0]);
+				unset($data[1]);
+
+				foreach ($rows as $row) {
+					@file_put_contents($output, '"' . implode('","', array_merge([$row], $data)) . "\"\n", FILE_APPEND);
+				}
+			} else {
+				$prefix = array_splice($data, 0, 2);
+				$suffix = array_splice($data, 0);
+
+				foreach ($rows as $row) {
+					@file_put_contents($output, '"' . implode('","', array_merge($prefix, [$row], $suffix)) . "\"\n", FILE_APPEND);
+				}
+			}
+		}
 }
 
 fclose($file);
