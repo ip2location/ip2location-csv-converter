@@ -15,6 +15,7 @@
         }
     ],
 	"require": {
-	    "mlocati/ip-lib": "^1"
+	    "mlocati/ip-lib": "^1",
+		"ext-bcmath": "*"
 	}
 }

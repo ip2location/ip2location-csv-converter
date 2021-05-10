@@ -87,8 +87,17 @@ switch ($conversionMode) {
 				continue;
 			}
 
-			$from = str_pad(dechex($data[0]), 16, '0', STR_PAD_LEFT);
-			$to = str_pad(dechex($data[1]), 16, '0', STR_PAD_LEFT);
+			if (bccomp($data[0], '4294967295') === 1) {
+				$from = str_pad(bcdechex($data[0]), 16, '0', STR_PAD_LEFT);
+			} else {
+				$from = str_pad(dechex($data[0]), 8, '0', STR_PAD_LEFT);
+			}
+
+			if (bccomp($data[1], '4294967295') === 1) {
+				$to = str_pad(bcdechex($data[1]), 16, '0', STR_PAD_LEFT);
+			} else {
+				$to = str_pad(dechex($data[1]), 8, '0', STR_PAD_LEFT);
+			}
 
 			if ($writeMode == 'replace') {
 				unset($data[0]);
@@ -133,7 +142,7 @@ switch ($conversionMode) {
 
 			$ranges = \IPLib\Factory::rangesFromBoundaries(intergerToIp($data[0]), intergerToIp($data[1]));
 
-			$rows = explode(' ', implode(' ' , $ranges));
+			$rows = explode(' ', implode(' ', $ranges));
 
 			if ($writeMode == 'replace') {
 				unset($data[0]);
@@ -218,11 +227,23 @@ function rangeToCIDR($ipStart, $ipEnd)
 	return $result;
 }
 
-
-function intergerToIp($number) {
+function intergerToIp($number)
+{
 	if ($number > 4294967295) {
 		return inet_ntop(str_pad(gmp_export($number), 16, "\0", STR_PAD_LEFT));
 	}
 
 	return long2ip($number);
+}
+
+function bcdechex($dec)
+{
+	$hex = '';
+	do {
+		$last = bcmod($dec, 16);
+		$hex = dechex($last) . $hex;
+		$dec = bcdiv(bcsub($dec, $last), 16);
+	} while ($dec > 0);
+
+	return $hex;
 }
