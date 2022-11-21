@@ -83,7 +83,7 @@ switch ($conversionMode) {
 		while (!feof($file)) {
 			$data = fgetcsv($file);
 
-			if (!preg_match('/^[0-9]+$/', $data[0]) || !preg_match('/^[0-9]+$/', $data[1])) {
+			if (!preg_match('/^[0-9]+$/', (string)$data[0]) || !preg_match('/^[0-9]+$/', (string)$data[1])) {
 				continue;
 			}
 
@@ -114,7 +114,7 @@ switch ($conversionMode) {
 		while (!feof($file)) {
 			$data = fgetcsv($file);
 
-			if (!preg_match('/^[0-9]+$/', $data[0]) || !preg_match('/^[0-9]+$/', $data[1])) {
+			if (!preg_match('/^[0-9]+$/', (string)$data[0]) || !preg_match('/^[0-9]+$/', (string)$data[1])) {
 				continue;
 			}
 
@@ -136,7 +136,7 @@ switch ($conversionMode) {
 		while (!feof($file)) {
 			$data = fgetcsv($file);
 
-			if (!preg_match('/^[0-9]+$/', $data[0]) || !preg_match('/^[0-9]+$/', $data[1])) {
+			if (!preg_match('/^[0-9]+$/', (string)$data[0]) || !preg_match('/^[0-9]+$/', (string)$data[1])) {
 				continue;
 			}
 
