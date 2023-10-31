@@ -12,7 +12,7 @@ define('ROOT', __DIR__ . DS);
 require 'vendor/autoload.php';
 
 if (!isset($argv)) {
-	die('ERROR: Please run this script in command line.');
+	exit('ERROR: Please run this script in command line.');
 }
 
 $conversionMode = 'range';
@@ -42,38 +42,38 @@ foreach ($argv as $param) {
 				break;
 
 			default:
-				die('ERROR: Invalid parameter "' . $param . '".');
+				exit('ERROR: Invalid parameter "' . $param . '".');
 		}
 	}
 }
 
 if (count($argv) < 3) {
-	die('ERORR: Missing parameters.');
+	exit('ERORR: Missing parameters.');
 }
 
 if (!isset($argv[count($argv) - 2])) {
-	die('ERORR: The input CSV is not provided.');
+	exit('ERORR: The input CSV is not provided.');
 }
 
 if (!isset($argv[count($argv) - 1])) {
-	die('ERORR: The output directory is not provided.');
+	exit('ERORR: The output directory is not provided.');
 }
 
 $input = $argv[count($argv) - 2];
 $output = $argv[count($argv) - 1];
 
 if (!file_exists($input)) {
-	die('ERROR: The input CSV file is not found.');
+	exit('ERROR: The input CSV file is not found.');
 }
 
 if (!is_writable(dirname($output))) {
-	die('ERROR: The output directory is not writable.');
+	exit('ERROR: The output directory is not writable.');
 }
 
 $file = fopen($input, 'r');
 
 if (!$file) {
-	die('ERROR: Failed to read the input CSV.');
+	exit('ERROR: Failed to read the input CSV.');
 }
 
 @file_put_contents($output, '');
@@ -83,25 +83,24 @@ switch ($conversionMode) {
 		while (!feof($file)) {
 			$data = fgetcsv($file);
 
-			if (!preg_match('/^[0-9]+$/', (string)$data[0]) || !preg_match('/^[0-9]+$/', (string)$data[1])) {
+			if (!preg_match('/^[0-9]+$/', (string) $data[0]) || !preg_match('/^[0-9]+$/', (string) $data[1])) {
 				continue;
 			}
 
 			if (bccomp($data[0], '4294967295') === 1) {
-				$from = str_pad(bcdechex($data[0]), 16, '0', STR_PAD_LEFT);
+				$from = str_pad(bcdechex($data[0]), 32, '0', STR_PAD_LEFT);
 			} else {
 				$from = str_pad(dechex($data[0]), 8, '0', STR_PAD_LEFT);
 			}
 
 			if (bccomp($data[1], '4294967295') === 1) {
-				$to = str_pad(bcdechex($data[1]), 16, '0', STR_PAD_LEFT);
+				$to = str_pad(bcdechex($data[1]), 32, '0', STR_PAD_LEFT);
 			} else {
 				$to = str_pad(dechex($data[1]), 8, '0', STR_PAD_LEFT);
 			}
 
 			if ($writeMode == 'replace') {
-				unset($data[0]);
-				unset($data[1]);
+				unset($data[0], $data[1]);
 
 				@file_put_contents($output, '"' . $from . '","' . $to . '","' . implode('","', $data) . "\"\n", FILE_APPEND);
 			} else {
@@ -114,7 +113,7 @@ switch ($conversionMode) {
 		while (!feof($file)) {
 			$data = fgetcsv($file);
 
-			if (!preg_match('/^[0-9]+$/', (string)$data[0]) || !preg_match('/^[0-9]+$/', (string)$data[1])) {
+			if (!preg_match('/^[0-9]+$/', (string) $data[0]) || !preg_match('/^[0-9]+$/', (string) $data[1])) {
 				continue;
 			}
 
@@ -122,8 +121,7 @@ switch ($conversionMode) {
 			$to = intergerToIp($data[1]);
 
 			if ($writeMode == 'replace') {
-				unset($data[0]);
-				unset($data[1]);
+				unset($data[0], $data[1]);
 
 				@file_put_contents($output, '"' . $from . '","' . $to . '","' . implode('","', $data) . "\"\n", FILE_APPEND);
 			} else {
@@ -136,7 +134,7 @@ switch ($conversionMode) {
 		while (!feof($file)) {
 			$data = fgetcsv($file);
 
-			if (!preg_match('/^[0-9]+$/', (string)$data[0]) || !preg_match('/^[0-9]+$/', (string)$data[1])) {
+			if (!preg_match('/^[0-9]+$/', (string) $data[0]) || !preg_match('/^[0-9]+$/', (string) $data[1])) {
 				continue;
 			}
 
@@ -145,8 +143,7 @@ switch ($conversionMode) {
 			$rows = explode(' ', implode(' ', $ranges));
 
 			if ($writeMode == 'replace') {
-				unset($data[0]);
-				unset($data[1]);
+				unset($data[0], $data[1]);
 
 				foreach ($rows as $row) {
 					@file_put_contents($output, '"' . implode('","', array_merge([$row], $data)) . "\"\n", FILE_APPEND);
@@ -166,7 +163,7 @@ fclose($file);
 
 function iMask($s)
 {
-	return base_convert((pow(2, 32) - pow(2, (32 - $s))), 10, 16);
+	return base_convert(pow(2, 32) - pow(2, 32 - $s), 10, 16);
 }
 
 function iMaxBlock($ibase, $tbit)
@@ -221,7 +218,7 @@ function rangeToCIDR($ipStart, $ipEnd)
 		}
 
 		array_push($result, "$ip/$maxSize");
-		$start += pow(2, (32 - $maxSize));
+		$start += pow(2, 32 - $maxSize);
 	}
 
 	return $result;
