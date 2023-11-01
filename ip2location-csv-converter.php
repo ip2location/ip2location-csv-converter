@@ -108,9 +108,9 @@ switch ($conversionMode) {
 			}
 
 			if ($conversionMode == 'hex6') {
-				$from = str_pad(bcdechex($data[1]), 32, '0', STR_PAD_LEFT);
+				$to = str_pad(bcdechex($data[1]), 32, '0', STR_PAD_LEFT);
 			} else if ($conversionMode == 'hex4') {
-				$from = str_pad(bcdechex($data[1]), 16, '0', STR_PAD_LEFT);
+				$to = str_pad(bcdechex($data[1]), 16, '0', STR_PAD_LEFT);
 			} else if (bccomp($data[1], '4294967295') === 1) {
 				$to = str_pad(bcdechex($data[1]), 32, '0', STR_PAD_LEFT);
 			} else {
