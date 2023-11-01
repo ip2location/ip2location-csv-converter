@@ -38,7 +38,9 @@ php ip2location-csv-converter.php [-range | -cidr] [-replace | -append] INPUT_FI
 | --------- | ------------------------------------------------------------ |
 | -range    | IP numbers will be converted into the first IP address and last IP address in the range. |
 | -cidr     | IP numbers will be converted into CIDR format.               |
-| -hex      | IP numbers will be converted into hexadecimal format.        |
+| -hex      | IP numbers will be converted into hexadecimal format. (auto padding)        |
+| -hex4     | IP numbers will be converted into hexadecimal format. (pad IPv4)        |
+| -hex6     | IP numbers will be converted into hexadecimal format. (pad IPv6)        |
 | -replace  | The IP numbers in will be replaced to the selected format.   |
 | -append   | The converted format will be appended after the IP numbers field. |
 

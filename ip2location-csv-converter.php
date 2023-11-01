@@ -29,6 +29,14 @@ foreach ($argv as $param) {
 				$conversionMode = 'cidr';
 				break;
 
+			case '-hex6':
+				$conversionMode = 'hex6';
+				break;
+
+			case '-hex4':
+				$conversionMode = 'hex4';
+				break;
+
 			case '-hex':
 				$conversionMode = 'hex';
 				break;
@@ -79,6 +87,8 @@ if (!$file) {
 @file_put_contents($output, '');
 
 switch ($conversionMode) {
+	case 'hex6':
+	case 'hex4':
 	case 'hex':
 		while (!feof($file)) {
 			$data = fgetcsv($file);
@@ -87,16 +97,24 @@ switch ($conversionMode) {
 				continue;
 			}
 
-			if (bccomp($data[0], '4294967295') === 1) {
+			if ($conversionMode == 'hex6') {
+				$from = str_pad(bcdechex($data[0]), 32, '0', STR_PAD_LEFT);
+			} else if ($conversionMode == 'hex4') {
+				$from = str_pad(bcdechex($data[0]), 16, '0', STR_PAD_LEFT);
+			} else if (bccomp($data[0], '4294967295') === 1) {
 				$from = str_pad(bcdechex($data[0]), 32, '0', STR_PAD_LEFT);
 			} else {
-				$from = str_pad(dechex($data[0]), 8, '0', STR_PAD_LEFT);
+				$from = str_pad(dechex($data[0]), 16, '0', STR_PAD_LEFT);
 			}
 
-			if (bccomp($data[1], '4294967295') === 1) {
+			if ($conversionMode == 'hex6') {
+				$from = str_pad(bcdechex($data[1]), 32, '0', STR_PAD_LEFT);
+			} else if ($conversionMode == 'hex4') {
+				$from = str_pad(bcdechex($data[1]), 16, '0', STR_PAD_LEFT);
+			} else if (bccomp($data[1], '4294967295') === 1) {
 				$to = str_pad(bcdechex($data[1]), 32, '0', STR_PAD_LEFT);
 			} else {
-				$to = str_pad(dechex($data[1]), 8, '0', STR_PAD_LEFT);
+				$to = str_pad(dechex($data[1]), 16, '0', STR_PAD_LEFT);
 			}
 
 			if ($writeMode == 'replace') {
