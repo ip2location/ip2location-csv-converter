@@ -90,6 +90,7 @@ switch ($conversionMode) {
 	case 'hex6':
 	case 'hex4':
 	case 'hex':
+		$temprows = [];
 		while (!feof($file)) {
 			$data = fgetcsv($file);
 
@@ -120,14 +121,24 @@ switch ($conversionMode) {
 			if ($writeMode == 'replace') {
 				unset($data[0], $data[1]);
 
-				@file_put_contents($output, '"' . $from . '","' . $to . '","' . implode('","', $data) . "\"\n", FILE_APPEND);
+				$temprows[] = '"' . $from . '","' . $to . '","' . implode('","', $data) . "\"\n";
 			} else {
-				@file_put_contents($output, '"' . implode('","', array_merge(array_splice($data, 0, 2), [$from, $to], array_splice($data, 0))) . "\"\n", FILE_APPEND);
+				$temprows[] = '"' . implode('","', array_merge(array_splice($data, 0, 2), [$from, $to], array_splice($data, 0))) . "\"\n";
+			}
+			
+			if (count($temprows) == 1000) {
+				$tempfile = @fopen($output, 'a');
+				foreach ($temprows as $temprow) {
+					@fwrite($tempfile, $temprow);
+				}
+				@fclose($tempfile);
+				$temprows = [];
 			}
 		}
 		break;
 
 	case 'range':
+		$temprows = [];
 		while (!feof($file)) {
 			$data = fgetcsv($file);
 
@@ -141,14 +152,24 @@ switch ($conversionMode) {
 			if ($writeMode == 'replace') {
 				unset($data[0], $data[1]);
 
-				@file_put_contents($output, '"' . $from . '","' . $to . '","' . implode('","', $data) . "\"\n", FILE_APPEND);
+				$temprows[] = '"' . $from . '","' . $to . '","' . implode('","', $data) . "\"\n";
 			} else {
-				@file_put_contents($output, '"' . implode('","', array_merge(array_splice($data, 0, 2), [$from, $to], array_splice($data, 0))) . "\"\n", FILE_APPEND);
+				$temprows[] = '"' . implode('","', array_merge(array_splice($data, 0, 2), [$from, $to], array_splice($data, 0))) . "\"\n";
+			}
+			
+			if (count($temprows) == 1000) {
+				$tempfile = @fopen($output, 'a');
+				foreach ($temprows as $temprow) {
+					@fwrite($tempfile, $temprow);
+				}
+				@fclose($tempfile);
+				$temprows = [];
 			}
 		}
 		break;
 
 	default:
+		$temprows = [];
 		while (!feof($file)) {
 			$data = fgetcsv($file);
 
@@ -164,15 +185,24 @@ switch ($conversionMode) {
 				unset($data[0], $data[1]);
 
 				foreach ($rows as $row) {
-					@file_put_contents($output, '"' . implode('","', array_merge([$row], $data)) . "\"\n", FILE_APPEND);
+					$temprows[] = '"' . implode('","', array_merge([$row], $data)) . "\"\n";
 				}
 			} else {
 				$prefix = array_splice($data, 0, 2);
 				$suffix = array_splice($data, 0);
 
 				foreach ($rows as $row) {
-					@file_put_contents($output, '"' . implode('","', array_merge($prefix, [$row], $suffix)) . "\"\n", FILE_APPEND);
+					$temprows[] = '"' . implode('","', array_merge($prefix, [$row], $suffix)) . "\"\n";
 				}
+			}
+			
+			if (count($temprows) == 1000) {
+				$tempfile = @fopen($output, 'a');
+				foreach ($temprows as $temprow) {
+					@fwrite($tempfile, $temprow);
+				}
+				@fclose($tempfile);
+				$temprows = [];
 			}
 		}
 }
