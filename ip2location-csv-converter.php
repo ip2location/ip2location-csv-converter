@@ -209,6 +209,17 @@ switch ($conversionMode) {
 
 fclose($file);
 
+// Do the write if there is remaining row waiting
+if (count($temprows) > 0) {
+	$tempfile = @fopen($output, 'a');
+	foreach ($temprows as $temprow) {
+		@fwrite($tempfile, $temprow);
+	}
+	@fclose($tempfile);
+	$temprows = [];
+}
+
+
 function iMask($s)
 {
 	return base_convert(pow(2, 32) - pow(2, 32 - $s), 10, 16);
