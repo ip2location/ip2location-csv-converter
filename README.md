@@ -1,6 +1,6 @@
 # IP2Location CSV Converter
 
- > __Note__: **For a more efficient and faster conversion process, we recommend using the IP2Location Python CSV Converter**
+ > __Note__: **For a more efficient and faster conversion process, we recommend using the [IP2Location Python CSV Converter](https://github.com/ip2location/ip2location-python-csv-converter)**
 
 This PHP script converts IP2Location CSV data file, that contains the IP address in numeric notation, into dot-decimal notation (such as x.x.x.x) or CIDR notation (x.x.x.x/24). It supports both the IP2Location commercial edition, DB1 to DB24 database and also the free edition, IP2Location LITE database. In addition to this, this converter can also be used to convert any CSV file that contains the IP number (the numeric notation).
 
